@@ -1,3 +1,6 @@
+init:
+	python3 init_structure.py
+
 scrape:
 	make scrape_user
 	make scrape_problem
