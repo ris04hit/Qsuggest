@@ -87,29 +87,54 @@ async def user_data():
                     printf("Sleeping for avoiding server overwhelming")
                     time.sleep(sleep_time)
             df = pd.DataFrame({'handle': sorted(list(users))})
-            df.to_csv('data/raw/scrapped_data/handles.csv', index = False)
+            df.to_csv('data/raw/scraped/handles.csv', index = False)
+            printf(f'handles.csv created\tTime Taken: {time.time() - start_time}')
             
         sys.stdout = sys.__stdout__
         printf('handles.csv created')
 
 
-# Creating problems.csv and tag.csv
+# Creating problems.csv and tags.csv
 async def problem_data():
     async with aiohttp.ClientSession() as session:
         with open('logs/scrape_problem.txt', 'w') as sys.stdout:
             start_time = time.time()
             
+            # Requesting list of problems
             problem_list_request = asyncio.create_task(request_json(session, api_url('pp')))
             problem_list = await asyncio.gather(problem_list_request)
             printf(f"Problem List Fetched\t\tTime Taken: {time.time() - start_time}")
             
+            # Combining problem and its statistics in single df
             df_problem = pd.DataFrame(problem_list[0]['problems'])
             df_statistics = pd.DataFrame(problem_list[0]['problemStatistics'])
             df = pd.concat((df_problem.drop(columns=['points']), df_statistics.drop(columns=['contestId', 'index'])), axis=1)
-            df.to_csv('data/raw/scrapped_data/problems.csv', index = False)
+            df.to_csv('data/scraped/problems.csv', index = False)
+            printf(f'problems.csv created\t\tTime Taken: {time.time()-start_time}')
 
         sys.stdout = sys.__stdout__
         printf('problems.csv created')
+        
+        with open('logs/scrape_problem.txt', 'a') as sys.stdout:
+            # Creating a new df corresponding to tags
+            tag_list = []      # Problem Id is the serial number of problem in problems.csv
+            
+            # Creating new tag dataframe
+            for ind_problem, row_problem in df.iterrows():
+                for tag in row_problem['tags']:
+                    for ind_tag in range(len(tag_list)):
+                        if tag_list[ind_tag]['tags'] == tag:
+                            tag_list[ind_tag]['ProblemId'].append(ind_problem)
+                            break
+                    else:
+                        tag_list.append({'tags': tag, 'ProblemId': [ind_problem]})
+            df_tag = pd.DataFrame(tag_list)
+            df_tag.to_csv('data/scraped/tags.csv', index = False)
+            printf(f'tag.csv created\t\t\t\tTime Taken: {time.time()-start_time}')
+        
+        sys.stdout = sys.__stdout__
+        printf('tag.csv created')
+
 
 if __name__ == '__main__':
     if len(sys.argv) <= 1:
@@ -119,5 +144,5 @@ if __name__ == '__main__':
     if sys.argv[1] == 'user':       # Generate handles.csv
         asyncio.run(user_data())
     
-    if sys.argv[1] == 'problem':    # Generate problems.csv
+    if sys.argv[1] == 'problem':    # Generate problems.csv and tags.csv
         asyncio.run(problem_data())
