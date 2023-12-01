@@ -6,7 +6,6 @@ Before running any file/script/notebook execute in root directory: `make init`
 This will make sure the directory structure is correct.
 
 ## **Data Scraping**  
-I have not uploaded the scraped data on git repo, but the scripts for scrapping the data is uploaded in [src/data](src/data/). You can run scripts individually or using Makefile. Just make sure to run any of two in root directory only.  
+Scraped data is uploaded in [data/scraped](data/scraped/) and the scripts for scrapping the data is uploaded in [src/data](src/data/). You can run scripts individually or using Makefile. Just make sure to run it in root directory only.  
 For scraping all the data execute:  `make scrape`  
-For scraping only handles.csv execute: `make scrape_user`  
-For scraping only problems.csv and tags.csv execute: `make scrape_problem`
+For scraping only handles.csv/problems.csv/tags.csv execute: `make scrape_raw`  

@@ -1,5 +1,5 @@
 # Ignore build artifacts
-_*
+_[a-z]*
 
 # Ignore log files
 /logs/*

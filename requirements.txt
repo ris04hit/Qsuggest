@@ -1,2 +1,3 @@
 # Data Scrapping
 aiohttp==3.8.6
+pandas==1.5.3
