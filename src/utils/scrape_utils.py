@@ -1,5 +1,7 @@
 import sys
 import json
+import pandas as pd
+
 
 # Flushing output after printing
 def printf(*args):
@@ -30,8 +32,14 @@ def api_url(methodName, contestID = None, gym = False, handle = None, handles = 
     if methodName == 'ur':
         return f'{url}/user.ratedList'
     
-    return None
+    # user status
+    # args: handle
+    if methodName == 'us':
+        return f'{url}/user.status?handle={handle}'
     
+    return None
+
+
 # Requesting data in json format
 async def request_json(session, url):
     async with session.get(url) as response:
@@ -47,3 +55,17 @@ async def request_json(session, url):
             printf(f"JSON Error: {ex}")
             return None
 
+
+# Lookup for problemId
+def problemId_lookup(df_problem: pd.DataFrame):
+    problem_dict = {}
+    for problemId, row in df_problem.iterrows():
+        problem_dict[(row['contestId'], row['index'])] = problemId
+    def return_func(problem):
+        if ('contestId' in problem) and ('index' in problem):
+            key = (problem['contestId'], problem['index'])
+            if key in problem_dict:
+                return problem_dict[key]
+            return None
+        return None
+    return return_func

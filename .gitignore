@@ -1,5 +1,8 @@
 # Ignore build artifacts
-_[a-z]*
+/build_artifacts/
 
 # Ignore log files
 /logs/*
+
+# Large data
+data/scraped/submission/

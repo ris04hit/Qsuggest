@@ -1,3 +1,9 @@
+# Required
+pandas==1.5.3
+
 # Data Scrapping
 aiohttp==3.8.6
-pandas==1.5.3
+
+# Data Analysis
+matplotlib==3.8.1
+numpy==1.26.2
