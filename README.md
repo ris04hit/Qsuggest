@@ -6,7 +6,7 @@ Before running any file/script/notebook execute in root directory: `make init`
 This will make sure the directory structure is correct.
 
 ## **Changing Directory Structure**
-For changing directory structure, folder and file destination addresses need to be changed in [init_structure.py](init_structure.py) and [src/utils/address_utils.py](src/utils/address_utils.py). Also import locations in every file needs to be changed depending upon the new directory structure. Addresses need to be explicitly changed in notebooks.
+For changing directory structure, folder and file destination addresses need to be changed in [init_structure.py](init_structure.py) and [src/utils/address_utils.py](src/utils/address_utils.py). Also import locations in every file needs to be changed depending upon the new directory structure.
 
 ## **Data Scraping**  
 Scraped data is uploaded in [data/scraped](data/scraped/) (data in [data/scraped/submission](data/scraped/submission/) is not uploaded due to its large size) and the scripts for scrapping the data is uploaded in [src/data](src/data/). You can run scripts individually or using Makefile. Just make sure to run it in root directory only.  
