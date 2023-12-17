@@ -20,9 +20,13 @@ scrape_submission:
 
 process:
 	make problem_diff
+	make impute_prob
 
 problem_diff:
 	python3 src/data/problem_difficulty.py $(overwrite)
+
+impute_prob:
+	python3 src/data/impute_problem.py $(overwrite)
 
 # train:
 # 	make knn_problem_diff

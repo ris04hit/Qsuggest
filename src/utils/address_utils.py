@@ -17,6 +17,7 @@ class Data:
         self.submission_dir = f'{self.prefix}scraped/submission/'
         self.problem_diff = f'{self.prefix}interim/problem_difficulty.csv{self.suffix}'
         self.temp_dir = f'{self.prefix}temp/'
+        self.imputed_prob = f'{self.prefix}processed/imputed_problem.npy{self.suffix}'
     
     def submission(self, handle, prefix = ''):
         return f'{prefix}{self.submission_dir}{handle}.csv{self.suffix}'

@@ -37,6 +37,7 @@ To process all the data, execute: `make process`
 
 For processing each file individually, run following commands in given order only (so that there is no data inconsistency):  
 To create [data/interim/problem_difficulty.csv](data/interim/problem_difficulty.csv), execute: `make problem_diff`  
+To create [data/processed/imputed_problem.npy](data/processed/imputed_problem.csv), execute: `make imputed_prob`
 
 ## **Training Models**
 Data which is used to directly train the model is stored in [data/processed](data/processed/). Models are saved in [models](models/). Most of the data in [data/processed](data/processed/) is created directly by preprocessing of model without using any separate script. Scripts for training model are stored in [src/models](src/models/).  

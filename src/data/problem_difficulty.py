@@ -9,7 +9,7 @@ import sklearn.linear_model as sk
 import matplotlib.pyplot as plt
 
 sys.path.append(os.path.abspath('src'))
-from utils.scrape_utils import *
+from utils.data_process_utils import *
 from utils.address_utils import *
 
 

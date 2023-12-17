@@ -14,15 +14,7 @@ def printf(*args):
 
 # def print_device():
 #     printf(f"Using device: {device} for training.")
-    
-def distance(X, Y, weights, missing_values=np.nan):
-    length = X.shape[0]
-    diff = X - Y
-    sq_diff = diff * diff
-    not_missing_index = np.argwhere(sq_diff != missing_values)
-    new_weight = weights[not_missing_index]
-    new_weight/=np.sum(new_weight)     # Normalizing new weights
-    return np.matmul(new_weight.T, sq_diff[not_missing_index])
+
 
 # Feed Forward Neural Network
 # class FNN(torch.nn.Module):
