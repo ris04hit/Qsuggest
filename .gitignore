@@ -6,3 +6,13 @@
 
 # Large data
 data/scraped/submission/
+
+# Analysis notebooks
+*.ipynb
+.ipynb_checkpoints
+
+# temp files
+data/temp
+
+# Ignoring temporarily
+*knn*

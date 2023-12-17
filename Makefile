@@ -3,10 +3,14 @@ overwrite = 0
 init:
 	python3 init_structure.py
 
+run:
+	make scrape
+	make process
+#	make train
+
 scrape:
 	make scrape_raw
 	make scrape_submission
-	make problem_diff
 
 scrape_raw:
 	python3 src/data/scrape_raw.py $(overwrite)
@@ -14,5 +18,14 @@ scrape_raw:
 scrape_submission:
 	python3 src/data/scrape_submission.py $(overwrite)
 
+process:
+	make problem_diff
+
 problem_diff:
 	python3 src/data/problem_difficulty.py $(overwrite)
+
+# train:
+# 	make knn_problem_diff
+
+# knn_problem_diff:
+# 	python3 src/models/knn_problem_difficulty.py $(overwrite)
