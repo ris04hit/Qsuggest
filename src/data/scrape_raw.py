@@ -106,3 +106,7 @@ if __name__ == '__main__':
         asyncio.run(tag_data())
     else:
         print(f'{address.data.tags} already exists')
+else:
+    home_directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    prefix = os.path.relpath(home_directory)
+    address = Address(prefix = prefix)

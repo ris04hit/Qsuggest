@@ -144,3 +144,7 @@ if __name__ == '__main__':
     
     sys.stdout = sys.__stdout__
     printf(f"{address.data.problem_diff} created")
+else:
+    home_directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    prefix = os.path.relpath(home_directory)
+    address = Address(prefix = prefix)

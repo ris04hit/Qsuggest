@@ -16,3 +16,6 @@ data/temp
 
 # Ignoring temporarily
 *knn*
+
+# byte-compiled
+__pycache__/

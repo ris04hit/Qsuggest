@@ -197,4 +197,7 @@ if __name__ == '__main__':
         except Exception as e:
             sys.stdout = sys.__stdout__
             print(e)
-
+else:
+    home_directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    prefix = os.path.relpath(home_directory)
+    address = Address(prefix = prefix)

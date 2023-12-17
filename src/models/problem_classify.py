@@ -1,7 +1,7 @@
 import sys
 import os
 import numpy as np
-import sklearn.cluster as sk_clust
+from sklearn.cluster import KMeans
 import pickle
 
 sys.path.append(os.path.abspath('src'))
@@ -14,9 +14,9 @@ from utils.model_utils import *
 def k_mean_cluster(num_cluster, weights):
     problem_data = np.load(address.data.imputed_prob)
     weighted_problem_data = np.matmul(problem_data, weights.reshape(-1, 1))
-    kmeans = sk_clust.KMeans(n_clusters = num_cluster, n_init = 100).fit(weighted_problem_data)
+    kmeans = KMeans(n_clusters = num_cluster, n_init = 100).fit(weighted_problem_data)
     pickle.dump(kmeans, open(address.model.prob_classify, 'wb'))
-    print(kmeans.inertia_)
+    return kmeans.inertia_/problem_data.shape[0]
 
 # Main
 if __name__ == '__main__':
@@ -29,3 +29,7 @@ if __name__ == '__main__':
         sys.exit()
     
     k_mean_cluster(100, create_weight())
+else:
+    home_directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    prefix = os.path.relpath(home_directory)
+    address = Address(prefix = prefix)

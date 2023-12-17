@@ -56,3 +56,7 @@ if __name__ == '__main__':
     num_tag, processed_prob = problem_df_to_np(df_problem)
     impute_knn(processed_prob, create_weight(num_tag))
     printf(f'Created {address.data.imputed_prob} Successfully')
+else:
+    home_directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    prefix = os.path.relpath(home_directory)
+    address = Address(prefix = prefix)
