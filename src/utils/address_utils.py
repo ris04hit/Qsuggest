@@ -38,6 +38,7 @@ class Model:
     def __init__(self, prefix = 'models/', suffix = ''):
         self.prefix = prefix
         self.suffix = suffix
+        self.prob_classify = f'{self.prefix}problem_classify.pkl{self.suffix}'
         # self.knn_probem_diff = f'{self.prefix}knn_problem_diff.npy{self.suffix}'
 
 class Address:

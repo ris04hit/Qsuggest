@@ -38,13 +38,6 @@ def impute_knn(data, weights):
     imp_knn = sk_imp.KNNImputer(missing_values=np.nan, n_neighbors=2, metric = distance_func(weights))
     imputed_data = imp_knn.fit_transform(data)
     np.save(address.data.imputed_prob, imputed_data)
-    
-
-# Create Weight
-def create_weight(num_tag):
-    weights =[num_tag, num_tag/530, num_tag/16000, num_tag/1370]
-    weights.extend([1]*num_tag)
-    return np.array(weights)
 
 
 # Main

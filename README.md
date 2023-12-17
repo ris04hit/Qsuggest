@@ -46,3 +46,5 @@ By default training of model will not overwrite any of the preprocessed data and
 ### **Commands**
 To train all the models, execute: `make train`  
 
+For training each model individually, run following commands in given order only (so that there is no data inconsistency):  
+To train [problem classification model](models/problem_classify.pkl), execute: `make problem_classify`
