@@ -14,10 +14,10 @@ To perform all these action, execute: `make run`
 By default it will not overwrite any existing data or trained model. To overwrite, all of the existing data and models, execute: `make run overwrite=1`  
 
 
-For performing each of these steps individually, read the sections following this section.
+For performing each of these steps individually, read the sections following this section. Note that data for next model is dependent on previous model and hence the preprocessing step and training of models step is dependent on each other.   
 
 ## **Data Scraping**  
-Scraped data is uploaded in [data/scraped](data/scraped/) (data in [data/scraped/submission](data/scraped/submission/) is not uploaded due to its large size) and the scripts for scrapping the data is uploaded in [src/data](src/data/). You can run scripts individually or using Makefile. Just make sure to run it in root directory only.  
+Scraped data is uploaded in [data/scraped](data/scraped/) (data in [data/scraped/submission](data/scraped/submission/) and [data/scraped/rating](data/scraped/rating/) is not uploaded due to its large size) and the scripts for scrapping the data is uploaded in [src/data](src/data/). Scripts can be executed individually or using Makefile. Just make sure to execute it in root directory only.  
 By default any data scraped will not overwrite existing data. For overwriting, set overwrite=1 in make command. For example to scrape all data and to overwrite it over existing data (if any) execute: `make scrape overwrite=1`  
 ### **Commands**
 For scraping all the data, execute:  `make scrape`  
@@ -26,6 +26,7 @@ For scraping all the data, execute:  `make scrape`
 For scraping each file individually, run following commands in given order only (so that there is no data inconsistency):  
 For scraping only [handles.csv](data/scraped/handles.csv)/[problems.csv](data/scraped/problems.csv)/[tags.csv](data/scraped/tags.csv), execute: `make scrape_raw`  
 For scraping [sumbissions](data/scraped/submission), execute: `make scrape_submission`  
+For scraping [ratings](data/scraped/rating), execute: `make scrape_rating`
 
 ## **Data Processing**
 Data which is processed from the scraped data but can not be directly used for model training is saved in [data/interim](data/interim). On the other hand, data which is processed and can be directly used for model training is saved in [data/processed](data/processed). Scripts for processing data are stored in [src/data](src/data).  
@@ -35,7 +36,7 @@ By default any processed data will not overwrite existing data. For overwriting,
 To process all the data, execute: `make process`  
 
 
-For processing each file individually, run following commands in given order only (so that there is no data inconsistency):  
+For processing each file individually, run following commands:  
 To create [data/interim/problem_difficulty.csv](data/interim/problem_difficulty.csv), execute: `make problem_diff`  
 To create [data/processed/imputed_problem.npy](data/processed/imputed_problem.csv), execute: `make imputed_prob`
 
@@ -46,5 +47,14 @@ By default training of model will not overwrite any of the preprocessed data and
 ### **Commands**
 To train all the models, execute: `make train`  
 
-For training each model individually, run following commands in given order only (so that there is no data inconsistency):  
-To train [problem classification model](models/problem_classify.pkl), execute: `make problem_classify`
+For training each model individually, run following commands:  
+To train [problem classification model](models/problem_classify.pkl), execute: `make problem_classify`  
+
+## **Preprocessing and Training Models separately**
+By default preprocessing of data and training of model will not overwrite any of the preprocessed data and trained model. For overwriting, set overwrite=1 in make command. For example to preprocess and train all models and to overwrite it over exisiting data (if any) execute: `make preprocess_train overwrite=1`  
+
+### **Commands**
+To preprocess and train all the models, execute: `make preprocess_train`
+
+For preprocessing and training each model individually, run following commands in given order only (so that there is no data inconsistency):  
+For preprocessing and training [problem classification model](models/problem_classify.pkl), execute: `make problem_classify_model` 

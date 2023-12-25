@@ -9,5 +9,6 @@ aiohttp>=3.8.6
 matplotlib>=3.8.1
 
 # Modelling
+pandarallel>=1.6.5
 scikit-learn>=1.3.2
 # torch>=2.1.1

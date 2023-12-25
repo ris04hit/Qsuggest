@@ -29,8 +29,13 @@ def api_url(methodName, contestID = None, gym = False, handle = None, handles = 
     
     # user rated List
     # args: None
-    if methodName == 'ur':
+    if methodName == 'url':
         return f'{url}/user.ratedList'
+    
+    # user ratings
+    # args: handle
+    if methodName == 'ur':
+        return f'{url}/user.rating?handle={handle}'
     
     # user status
     # args: handle
