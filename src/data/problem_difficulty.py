@@ -95,8 +95,20 @@ def calculate_score(individual_score: np.ndarray, weights: np.ndarray):
 
 # Main
 if __name__ == '__main__':
+    if len(sys.argv) <= 1:
+        print("Required more command line arguments")
+        sys.exit()
+        
     if (sys.argv[1] != '1') and os.path.exists(address.data.problem_diff):
         printf(f'{address.data.problem_diff} already exists')
+        sys.exit()
+        
+    if not os.path.exists(address.data.handles):
+        printf(f'{address.data.handles} does not exist. Execute {address.src.scrape_raw} first.')
+        sys.exit()
+        
+    if not os.path.exists(address.data.problems):
+        printf(f'{address.data.problems} does not exist. Execute {address.src.scrape_raw} first.')
         sys.exit()
 
     with open(address.log.problem_diff , 'w') as sys.stdout:

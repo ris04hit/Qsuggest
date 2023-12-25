@@ -7,6 +7,7 @@
 # Large data
 data/scraped/submission/
 data/scraped/rating/
+data/processed/user_problem
 
 # Analysis notebooks
 *.ipynb

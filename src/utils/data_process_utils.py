@@ -54,7 +54,7 @@ def problem_df_to_np(df_problem: pd.DataFrame):
     
     # Creating numpy array of data
     for ind_prob, problem in df_problem.iterrows():
-        converted_problem = [problem['difficulty'], problem['points'], problem['rating'], problem['solvedCount']]
+        converted_problem = [1000*problem['difficulty'], problem['points'], problem['rating'], problem['solvedCount']]
         # One Hot Encoding for tags
         converted_problem.extend([0]*num_tag)
         for tag in problem['tags']:
@@ -135,7 +135,7 @@ def prob_calc(df: pd.DataFrame, problem_class: np.ndarray):
 
 
 # Creating data for a particular user
-def create_up_data(user: pd.Series, problem_class: np.ndarray, problem_data: np.ndarray, start_time = time.time()):
+def create_up_data(user: pd.Series, problem_class: np.ndarray, problem_data: np.ndarray, num_tag: int, start_time = time.time()):
     num_class = len(set(problem_class))
     df_submission = pd.read_csv(address.data.submission(user['handle']))[['verdict', 'problemId', 'rating']]
     
@@ -159,4 +159,7 @@ def create_up_data(user: pd.Series, problem_class: np.ndarray, problem_data: np.
     
     printf(f'Processed user {user.name} with handle {user["handle"]}\tTime Taken: {time.time() - start_time}')
     
-    return pd.Series({'x': X_arr, 'y': Y_arr})
+    with np.errstate(over='ignore'):
+        return pd.Series({'x_cont': X_arr[:, :-num_tag].astype(np.float16),
+                          'x_cat': X_arr[:, -num_tag:].astype(np.int8),
+                          'y': Y_arr.astype(np.float32)})

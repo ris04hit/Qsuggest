@@ -19,9 +19,13 @@ def impute_knn(data, weights, num_neighbors):
 
 # Main
 if __name__ == '__main__':
+    if len(sys.argv) <= 1:
+        print("Required more command line arguments")
+        sys.exit()
+        
     # Checking data requirements
     if not os.path.exists(address.data.problems):
-        printf(f'{address.data.problems} does not exist')
+        printf(f'{address.data.problems} does not exist. Execute {address.src.scrape_raw} first.')
         sys.exit()
     
     # Checking overwrite

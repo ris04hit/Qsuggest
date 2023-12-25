@@ -30,7 +30,7 @@ class Data:
         
         self.imputed_prob = os.path.join(self.prefix, f'processed/imputed_problem.npy{self.suffix}')
         self.problem_class = os.path.join(self.prefix, f'processed/problem_class.npy{self.suffix}')
-        self.user_problem = os.path.join(self.prefix, f'processed/user_problem.npz{self.suffix}')
+        self.user_problem_dir = os.path.join(self.prefix, f'processed/user_problem')
     
     def submission(self, handle, prefix = ''):
         return os.path.join(prefix, self.submission_dir, f'{handle}.csv{self.suffix}')
@@ -40,6 +40,9 @@ class Data:
     
     def temp(self, filename, prefix = ''):
         return os.path.join(prefix, self.temp_dir, f'{filename}{self.suffix}')
+    
+    def user_problem(self, chunk_ind, prefix = ''):
+        return os.path.join(prefix, self.user_problem_dir, f'{chunk_ind}.npz{self.suffix}')
 
 
 class Src:

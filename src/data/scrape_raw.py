@@ -17,7 +17,7 @@ async def user_data():
             start_time = time.time()
             
             # Requesting list of users
-            user_list_request = asyncio.create_task(request_json(session, api_url('ur')))
+            user_list_request = asyncio.create_task(request_json(session, api_url('url')))
             user_list = await asyncio.gather(user_list_request)
             df = pd.DataFrame(user_list[0])
             drop_label = ['lastName',
@@ -89,23 +89,23 @@ async def tag_data():
 
 if __name__ == '__main__':
     if len(sys.argv) <= 1:
-        print("Required more command line arguments")
+        printf("Required more command line arguments")
         sys.exit()
     
     if (sys.argv[1] == '1') or (not os.path.exists(address.data.handles)):
         asyncio.run(user_data())
     else:
-        print(f'{address.data.handles} already exists')
+        printf(f'{address.data.handles} already exists')
     
     if (sys.argv[1] == '1') or (not os.path.exists(address.data.problems)):
         asyncio.run(problem_data())
     else:
-        print(f'{address.data.problems} already exists')
+        printf(f'{address.data.problems} already exists')
         
     if (sys.argv[1] == '1') or (not os.path.exists(address.data.tags)):
         asyncio.run(tag_data())
     else:
-        print(f'{address.data.tags} already exists')
+        printf(f'{address.data.tags} already exists')
 else:
     home_directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
     prefix = os.path.relpath(home_directory)
