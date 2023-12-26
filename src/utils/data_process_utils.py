@@ -54,7 +54,7 @@ def problem_df_to_np(df_problem: pd.DataFrame):
     
     # Creating numpy array of data
     for ind_prob, problem in df_problem.iterrows():
-        converted_problem = [1000*problem['difficulty'], problem['points'], problem['rating'], problem['solvedCount']]
+        converted_problem = [1000*problem['difficulty'], problem['points'], problem['rating'], problem['solvedCount']/100]
         # One Hot Encoding for tags
         converted_problem.extend([0]*num_tag)
         for tag in problem['tags']:

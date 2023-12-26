@@ -25,11 +25,11 @@ For scraping all the data, execute:  `make scrape`
 
 For scraping each file individually, run following commands in given order only (so that there is no data inconsistency):  
 For scraping only [handles.csv](data/scraped/handles.csv)/[problems.csv](data/scraped/problems.csv)/[tags.csv](data/scraped/tags.csv), execute: `make scrape_raw`  
-For scraping [sumbissions](data/scraped/submission), execute: `make scrape_submission`  
-For scraping [ratings](data/scraped/rating), execute: `make scrape_rating`
+For scraping [data/scraped/sumbission](data/scraped/submission), execute: `make scrape_submission`  
+For scraping [data/scraped/rating](data/scraped/rating), execute: `make scrape_rating`
 
 ## **Data Processing**
-Data which is processed from the scraped data but can not be directly used for model training is saved in [data/interim](data/interim). On the other hand, data which is processed and can be directly used for model training is saved in [data/processed](data/processed). Scripts for processing data are stored in [src/data](src/data).  
+Data which is processed from the scraped data but can not be directly used for model training is saved in [data/interim](data/interim). On the other hand, data which is processed and can be directly used for model training is saved in [data/processed](data/processed) (data in [data/processed/user_problem](data/processed/user_problem) is not uploaded due to its large size). Scripts for processing data are stored in [src/data](src/data).  
 By default any processed data will not overwrite existing data. For overwriting, set overwrite=1 in make command. For example to process all data and to overwrite it over existing data (if any) execute: `make process overwrite=1`
 
 ### **Commands**
@@ -38,8 +38,8 @@ To process all the data, execute: `make process`
 
 For processing each file individually, run following commands:  
 To create [data/interim/problem_difficulty.csv](data/interim/problem_difficulty.csv), execute: `make problem_diff`  
-To create [data/processed/imputed_problem.npy](data/processed/imputed_problem.csv), execute: `make imputed_prob`
-To create [data/processed/user_problem](data/processed/user_problem/), execute: `make user_prob`
+To create [data/processed/imputed_problem.npy](data/processed/imputed_problem.csv), execute: `make imputed_prob`  
+To create [data/processed/user_problem](data/processed/user_problem/), execute: `make user_prob`  
 
 ## **Training Models**
 Data which is used to directly train the model is stored in [data/processed](data/processed/). Models are saved in [models](models/). Most of the data in [data/processed](data/processed/) is created directly by preprocessing of model without using any separate script. Scripts for training model are stored in [src/models](src/models/).  

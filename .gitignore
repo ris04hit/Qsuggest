@@ -1,8 +1,8 @@
-# Ignore build artifacts
-/build_artifacts/
+# Ignore project plan files
+_project_plan/
 
 # Ignore log files
-/logs/*
+logs
 
 # Large data
 data/scraped/submission/

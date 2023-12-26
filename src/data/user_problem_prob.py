@@ -18,13 +18,13 @@ def user_problem_data():
         start_time = time.time()
         chunk_size = 4000
         df_user = pd.read_csv(address.data.handles).sample(frac=1, random_state=68)      # Random permutation
+        num_tag = len(pd.read_csv(address.data.tags))
+        problem_class = np.load(address.data.problem_class)
+        problem_data = np.load(address.data.imputed_prob)
         
         chunk_ind = 0
         for chunk_offset in range(0, len(df_user), chunk_size):
             df_user_chunk = df_user[chunk_offset : chunk_offset+chunk_size].reset_index(drop = True)
-            num_tag = len(pd.read_csv(address.data.tags))
-            problem_class = np.load(address.data.problem_class)
-            problem_data = np.load(address.data.imputed_prob)
             
             df_train_data = df_user_chunk.parallel_apply(lambda user: create_up_data(user, problem_class, problem_data, num_tag, start_time), axis=1)
             
@@ -50,6 +50,45 @@ def user_problem_data():
     printf(f'{address.data.user_problem_dir} created successfully')
 
 
+# Create files storing statistical data for user problem data
+def user_problem_stat():
+    with open(address.log.user_problem, 'a') as sys.stdout:
+        start_time = time.time()
+        num_chunk = len(os.listdir(address.data.user_problem_dir))
+        length_arr = []
+        mean_arr = []
+        std_arr = []
+        
+        for chunk_ind in range(num_chunk):
+            x_cont = np.load(address.data.user_problem(chunk_ind))['x_cont'].astype(np.float64)
+            
+            length_arr.append(x_cont.shape[0])
+            mean_arr.append(np.mean(x_cont, axis = 0))
+            std_arr.append(np.std(x_cont, axis = 0))
+            
+            del x_cont
+            printf(f'loaded {address.data.user_problem(chunk_ind)}\tTime Taken: {time.time() - start_time}')
+        
+        length_arr = np.array(length_arr)
+        mean_arr = np.array(mean_arr)
+        std_arr = np.array(std_arr)
+        
+        overall_mean = np.matmul(length_arr.reshape((1, -1))/np.sum(length_arr), mean_arr)
+        overall_std = np.sqrt(np.matmul(length_arr.reshape((1, -1))/np.sum(length_arr), std_arr*std_arr + mean_arr*mean_arr) - overall_mean*overall_mean)
+        
+        np.savez(address.data.user_problem_stat,
+                 length = length_arr,
+                 mean_arr = mean_arr,
+                 std_arr = std_arr,
+                 mean = overall_mean,
+                 std = overall_std)
+        
+        printf(f'Created {address.data.user_problem_stat} successfully')
+        
+    sys.stdout = sys.__stdout__
+    printf(f'Created {address.data.user_problem_stat} successfully')
+
+
 # Main
 if __name__ == '__main__':
     if len(sys.argv) <= 1:
@@ -69,13 +108,17 @@ if __name__ == '__main__':
         sys.exit()
     
     if (sys.argv[1] != '1') and os.path.exists(address.data.user_problem_dir):
-        printf(f'{address.data.user_problem_dir} already exists.')
-        sys.exit()
-    elif (sys.argv[1] == '1') and os.path.exists(address.data.user_problem_dir):
-        shutil.rmtree(address.data.user_problem_dir)
-        
-    os.makedirs(address.data.user_problem_dir)
-    user_problem_data()
+        printf(f'{address.data.user_problem_dir} already exists. Using it for further processing')
+    else:
+        if (sys.argv[1] == '1') and os.path.exists(address.data.user_problem_dir):
+            shutil.rmtree(address.data.user_problem_dir)
+        os.makedirs(address.data.user_problem_dir)
+        user_problem_data()
+    
+    if (sys.argv[1] != '1') and os.path.exists(address.data.user_problem_stat):
+        printf(f'{address.data.user_problem_stat} already exists.')
+    else:
+        user_problem_stat()
         
 else:
     home_directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
