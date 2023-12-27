@@ -8,6 +8,9 @@ import time
 sys.path.append(os.path.abspath('src'))
 from utils.address_utils import *
 
+home_directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+prefix = os.path.relpath(home_directory)
+address = Address(prefix = prefix)
 
 # Flushing output after printing
 def printf(*args):
