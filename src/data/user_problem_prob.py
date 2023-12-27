@@ -62,7 +62,7 @@ def user_problem_stat():
         for chunk_ind in range(num_chunk):
             x_cont = np.load(address.data.user_problem(chunk_ind))['x_cont'].astype(np.float64)
             
-            length_arr.append(x_cont.shape[0])
+            length_arr.append(x_cont.shape)
             mean_arr.append(np.mean(x_cont, axis = 0))
             std_arr.append(np.std(x_cont, axis = 0))
             
@@ -73,8 +73,8 @@ def user_problem_stat():
         mean_arr = np.array(mean_arr)
         std_arr = np.array(std_arr)
         
-        overall_mean = np.matmul(length_arr.reshape((1, -1))/np.sum(length_arr), mean_arr)
-        overall_std = np.sqrt(np.matmul(length_arr.reshape((1, -1))/np.sum(length_arr), std_arr*std_arr + mean_arr*mean_arr) - overall_mean*overall_mean)
+        overall_mean = np.matmul(length_arr[:, 0].reshape((1, -1))/np.sum(length_arr), mean_arr)
+        overall_std = np.sqrt(np.matmul(length_arr[:, 0].reshape((1, -1))/np.sum(length_arr), std_arr*std_arr + mean_arr*mean_arr) - overall_mean*overall_mean)
         
         np.savez(address.data.user_problem_stat,
                  length = length_arr,

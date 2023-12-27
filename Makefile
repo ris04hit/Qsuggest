@@ -43,14 +43,15 @@ problem_classify_model:
 
 # Preprocessing and training for user problem solve probability model
 up_prob_model:
-	make up_prob
+	make up_prob_data
+	make up_prob_train
 
 
 # Executing steps for processing data
 process:
 	make problem_diff
 	make impute_prob
-	make up_prob
+	make up_prob_data
 
 # Calculating problem difficulties
 problem_diff:
@@ -61,14 +62,19 @@ impute_prob:
 	python3 src/data/impute_problem.py $(overwrite)
 
 # Pre processing user problem probability data
-up_prob:
+up_prob_data:
 	python3 src/data/user_problem_prob.py $(overwrite)
 
 
 # Training all models
 train:
 	make problem_classify
+	make up_prob_train
 
 # Training model for problem classification
 problem_classify:
 	python3 src/models/problem_classify.py $(overwrite)
+
+# Training model for user problem probability of solving
+up_prob_train:
+	python3 src/models/up_probability_model.py $(overwrite)

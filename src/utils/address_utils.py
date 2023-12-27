@@ -11,6 +11,7 @@ class Log:
         self.scrape_rating = os.path.join(self.prefix, f'scrape_rating.log{self.suffix}')
         self.problem_diff = os.path.join(self.prefix, f'problem_difficulty.log{self.suffix}')
         self.user_problem = os.path.join(self.prefix, f'user_problem.log{self.suffix}')
+        self.up_train = os.path.join(self.prefix, f'up_train.log{self.suffix}')
 
 
 class Data:
@@ -59,12 +60,12 @@ class Src:
         self.user_problem_prob = os.path.join(self.prefix, f'data/user_problem_prob.py{self.suffix}')
         
         self.problem_classify = os.path.join(self.prefix, f'models/problem_classify.py{self.suffix}')
-        self.user_prob_label_solve = os.path.join(self.prefix, f'models/user_problem_label_solve.py{self.suffix}')
+        self.up_prob_model = os.path.join(self.prefix, f'models/up_probability_model.py{self.suffix}')
         
         self.address_utils = os.path.join(self.prefix, f'utils/address_utils.py{self.suffix}')
         self.data_process_utils = os.path.join(self.prefix, f'utils/data_process_utils.py{self.suffix}')
         self.model_utils = os.path.join(self.prefix, f'utils/model_utils.py{self.suffix}')
-        self.scrape_utils = os.path.join(self.prefix, f'model/scrape_utils.py{self.suffix}')
+        self.scrape_utils = os.path.join(self.prefix, f'utils/scrape_utils.py{self.suffix}')
 
 
 class Model:
@@ -73,6 +74,7 @@ class Model:
         self.suffix = suffix
         
         self.prob_classify = os.path.join(self.prefix, f'problem_classify.pkl{self.suffix}')
+        self.user_problem = os.path.join(self.prefix, f'user_problem.pt{self.suffix}')
 
 
 class Address:
