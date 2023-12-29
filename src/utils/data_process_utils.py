@@ -163,21 +163,3 @@ def create_up_data(user: pd.Series, problem_class: np.ndarray, problem_data: np.
         return pd.Series({'x_cont': X_arr[:, :-num_tag].astype(np.float16),
                           'x_cat': X_arr[:, -num_tag:].astype(np.int8),
                           'y': Y_arr.astype(np.float32)})
-
-
-# Creating data for particular user
-def create_user_data(handle: str, problem_class: np.ndarray):
-    df_user = pd.read_csv(address.data.handles)
-    user = df_user[df_user['handle'] == handle]
-    
-    df_submission = pd.read_csv(address.data.submission(handle))
-    df_submission = df_submission[df_submission['verdict'] == 'OK']
-    
-    problemId = set(df_submission['problemId'])
-    num_class = len(set(problem_class))
-    
-    onehot_class = np.zeros((num_class, ))
-    for pid in problemId:
-        onehot_class[problem_class[pid]] += 1
-        
-    return np.insert(onehot_class, 0, user['rating'])

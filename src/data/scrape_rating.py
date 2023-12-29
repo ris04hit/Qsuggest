@@ -168,7 +168,7 @@ async def scrape_rating(overwrite = False):
             for ind in delete_index:
                 printf(f'Removed {df_user["handle"][ind]} {ind} from handles.csv')
             df_user = df_user.drop(delete_index).reset_index(drop=True)
-            df_user.to_csv(address.data.handles)
+            df_user.to_csv(address.data.handles, index = False)
                     
         sys.stdout = sys.__stdout__
         printf(f'{address.data.rating_dir} completed')

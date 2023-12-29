@@ -1,7 +1,8 @@
 import sys
 import json
 import pandas as pd
-
+import aiohttp
+import asyncio
 
 # Flushing output after printing
 def printf(*args):
@@ -42,6 +43,11 @@ def api_url(methodName, contestID = None, gym = False, handle = None, handles = 
     if methodName == 'us':
         return f'{url}/user.status?handle={handle}'
     
+    # user info
+    # args: handle
+    if methodName == 'ui':
+        return f'{url}/user.info?handles={";".join(handles)}'
+    
     return None
 
 
@@ -67,6 +73,7 @@ def problemId_lookup(df_problem: pd.DataFrame):
     for problemId, row in df_problem.iterrows():
         problem_dict[(row['contestId'], row['index'])] = problemId
     def return_func(problem):
+        # print(problem)
         if ('contestId' in problem) and ('index' in problem):
             key = (problem['contestId'], problem['index'])
             if key in problem_dict:
@@ -74,3 +81,18 @@ def problemId_lookup(df_problem: pd.DataFrame):
             return None
         return None
     return return_func
+
+
+# Get user info
+async def get_user_info(handle):
+    async with aiohttp.ClientSession() as session:
+        user_info_request = asyncio.create_task(request_json(session, api_url('ui', handles=[handle])))
+        user_info = await asyncio.gather(user_info_request)
+        return user_info[0][0]
+    
+# Get user submission
+async def get_user_submission(handle):
+    async with aiohttp.ClientSession() as session:
+        user_submission_request = asyncio.create_task(request_json(session, api_url('us', handle=handle)))
+        user_submission = await asyncio.gather(user_submission_request)
+        return user_submission[0]

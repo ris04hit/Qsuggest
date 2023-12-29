@@ -3,7 +3,6 @@ import os
 import numpy as np
 import pandas as pd
 import torch.nn
-import torch.onnx
 from torch import save, load
 
 sys.path.append(os.path.abspath('src'))
@@ -72,13 +71,54 @@ def train_model():
     printf(f'{address.model.user_problem} created successfully')
 
 
-# Predict
-def predict():
+# # Predict
+# def predict():
+#     # Loading stats data
+#     up_stat = np.load(address.data.user_problem_stat)
+#     shape_arr = up_stat['length']
+#     mean_arr = up_stat['mean']
+#     std_arr = up_stat['std']
+    
+#     # Shape of input data
+#     cont_inp_width = shape_arr[0][1]
+#     cat_inp_width = len(pd.read_csv(address.data.tags))
+#     final_width = 128
+    
+#     # Creating model
+#     model = UP_FNN(cont_inp_width, cat_inp_width, final_width).to(device)
+#     model.load_state_dict(load(address.model.user_problem))
+#     model.eval()
+    
+#     # Problem data
+#     problem_class = np.load(address.data.problem_class)
+#     problem_data = np.load(address.data.imputed_prob)
+    
+#     def return_func(problem_Id, handle = None, plus_class = [], user_data = None):
+#         if user_data is None:
+#             if handle is None:
+#                 raise Exception('Not Enough Arguments')
+#             user_data = create_user_data(handle, problem_class)
+#         else:
+#             user_data = np.copy(user_data)
+#         for ind in plus_class:
+#             user_data[ind+1] += 1
+
+#         prob_data = problem_data[problem_Id]
+#         x = np.concatenate((user_data, prob_data)).reshape((1, -1))
+#         np.seterr(invalid='ignore')
+#         x[:, :cont_inp_width] -= mean_arr
+#         x[:, :cont_inp_width] = np.nan_to_num(np.divide(x[:, :cont_inp_width], std_arr, out=np.zeros_like(x[:, :cont_inp_width]), where= std_arr!=0))
+#         np.seterr(invalid='warn')
+#         x = torch.Tensor(x)
+#         return model(x).to('cpu').detach().numpy()
+        
+#     return return_func
+
+
+def predict(predict_x):
     # Loading stats data
     up_stat = np.load(address.data.user_problem_stat)
     shape_arr = up_stat['length']
-    mean_arr = up_stat['mean']
-    std_arr = up_stat['std']
     
     # Shape of input data
     cont_inp_width = shape_arr[0][1]
@@ -90,30 +130,10 @@ def predict():
     model.load_state_dict(load(address.model.user_problem))
     model.eval()
     
-    # Problem data
-    problem_class = np.load(address.data.problem_class)
-    problem_data = np.load(address.data.imputed_prob)
+    # Predictions
+    predict_y = model(predict_x)
     
-    def return_func(problem_Id, handle = None, plus_class = [], user_data = None):
-        if user_data is None:
-            if handle is None:
-                raise Exception('Not Enough Arguments')
-            user_data = create_user_data(handle, problem_class)
-        else:
-            user_data = np.copy(user_data)
-        for ind in plus_class:
-            user_data[ind+1] += 1
-
-        prob_data = problem_data[problem_Id]
-        x = np.concatenate((user_data, prob_data)).reshape((1, -1))
-        np.seterr(invalid='ignore')
-        x[:, :cont_inp_width] -= mean_arr
-        x[:, :cont_inp_width] = np.nan_to_num(np.divide(x[:, :cont_inp_width], std_arr, out=np.zeros_like(x[:, :cont_inp_width]), where= std_arr!=0))
-        np.seterr(invalid='warn')
-        x = torch.Tensor(x)
-        return model(x).to('cpu').detach().numpy()
-        
-    return return_func
+    return predict_y
 
 
 # Main
