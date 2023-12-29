@@ -75,8 +75,6 @@ class Model:
         
         self.prob_classify = os.path.join(self.prefix, f'problem_classify.pkl{self.suffix}')
         self.user_problem = os.path.join(self.prefix, f'user_problem.pt{self.suffix}')
-        self.user_problem_cat_to_cont_onnx = os.path.join(self.prefix, f'user_problem1.onnx{self.suffix}')
-        self.user_problem_main_onnx = os.path.join(self.prefix, f'user_problem2.onnx{self.suffix}')
 
 
 class Address:

@@ -8,7 +8,6 @@ init:
 run:
 	make scrape
 	make preprocess_train
-	make up_prob_model
 
 
 # Executing steps for scraping data
