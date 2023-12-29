@@ -31,9 +31,7 @@ class FNN(torch.nn.Module):
         
         if len(hidden_layer) == 0:
             raise Exception("Atleast one Hidden Layer needed")
-        
-        self.flatten = torch.nn.Flatten()
-        
+                
         fn = [torch.nn.Linear(input_size, hidden_layer[0])]
         if sigmoid:
             fn.append(torch.nn.Sigmoid())
@@ -57,7 +55,6 @@ class FNN(torch.nn.Module):
         self.sigmoid = sigmoid
         
     def forward(self, x):
-        x = self.flatten(x)
         x = self.fn(x)
         return x
 
@@ -164,3 +161,8 @@ def up_data(mean_arr, std_arr):
         return torch.Tensor(x), torch.Tensor(y)
     
     return return_func
+
+
+# Create dummy input
+def create_dummy_input(shape):
+    return torch.zeros(shape)

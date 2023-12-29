@@ -7,6 +7,8 @@ def create_directory(directory_path):
         os.makedirs(directory_path)
         
 create_directory('chrome_extensions')
+create_directory('chrome_extensions/icons')
+create_directory('chrome_extensions/scripts')
 create_directory('data')
 create_directory('data/interim')
 create_directory('data/scraped')
@@ -22,3 +24,4 @@ create_directory('src')
 create_directory('src/data')
 create_directory('src/models')
 create_directory('src/utils')
+create_directory('src/extension')

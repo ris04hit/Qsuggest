@@ -3,8 +3,8 @@ import os
 import numpy as np
 import pandas as pd
 import torch.nn
+import torch.onnx
 from torch import save, load
-import threading
 
 sys.path.append(os.path.abspath('src'))
 from utils.address_utils import *
@@ -88,6 +88,7 @@ def predict():
     # Creating model
     model = UP_FNN(cont_inp_width, cat_inp_width, final_width).to(device)
     model.load_state_dict(load(address.model.user_problem))
+    model.eval()
     
     # Problem data
     problem_class = np.load(address.data.problem_class)
@@ -115,6 +116,32 @@ def predict():
     return return_func
 
 
+# Save model in onnx format
+def onnx_model():
+    # Loading stats data
+    up_stat = np.load(address.data.user_problem_stat)
+    shape_arr = up_stat['length']
+    
+    # Shape of input data
+    cont_inp_width = shape_arr[0][1]
+    cat_inp_width = len(pd.read_csv(address.data.tags))
+    final_width = 128
+    
+    # Creating model
+    model = UP_FNN(cont_inp_width, cat_inp_width, final_width).to(device)
+    model.load_state_dict(load(address.model.user_problem))
+    model.eval()
+    
+    # Saving onnx
+    export_model_cat_to_cont = torch.onnx.dynamo_export(model.cat_to_cont, create_dummy_input((1, cat_inp_width)))
+    export_model_cat_to_cont.save(address.model.user_problem_cat_to_cont_onnx)
+    printf(f"{address.model.user_problem_cat_to_cont_onnx} created successfully")
+    
+    export_model_main = torch.onnx.dynamo_export(model.model, create_dummy_input((1, model.final_width)))
+    export_model_main.save(address.model.user_problem_main_onnx)
+    printf(f"{address.model.user_problem_main_onnx} created successfully")
+    
+
 # Main
 if __name__ == '__main__':
     if len(sys.argv) <= 1:
@@ -134,9 +161,14 @@ if __name__ == '__main__':
         sys.exit()
     
     if (sys.argv[1] != '1') and os.path.exists(address.model.user_problem):
-        printf(f'{address.model.user_problem} already exists.')
+        printf(f'{address.model.user_problem} already exists. Using it for further processing.')
     else:
-        train_model()    
+        train_model()
+        
+    if (sys.argv[1] != '1') and os.path.exists(address.model.user_problem_cat_to_cont_onnx) and os.path.exists(address.model.user_problem_main_onnx):
+        printf(f'{address.model.user_problem_onnx} and {address.model.user_problem_main_onnx} already exists.')
+    else:
+        onnx_model()
 else:
     home_directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
     prefix = os.path.relpath(home_directory)

@@ -199,7 +199,7 @@ if __name__ == '__main__':
     file_checked = 0
     corrupt = False
     execution_num = 0
-    while not terminate_execution():
+    while not terminate_execution(execution_num):
         if execution_num != 0:
             printf('\nRestarting execution\n')
             time.sleep(20)

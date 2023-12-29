@@ -21,3 +21,6 @@ data/temp
 
 # byte-compiled
 __pycache__/
+
+# virtual environment
+myenv/
