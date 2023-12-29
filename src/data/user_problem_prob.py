@@ -94,22 +94,22 @@ if __name__ == '__main__':
     if len(sys.argv) <= 1:
         print("Required more command line arguments")
         sys.exit()
-        
-    if not os.path.exists(address.data.handles):
-        printf(f'{address.data.handles} does not exist. Execute {address.src.scrape_raw} first.')
-        sys.exit()
-        
-    if not os.path.exists(address.data.imputed_prob):
-        printf(f'{address.data.imputed_prob} does not exist. Execute {address.src.impute_problem} first.')
-        sys.exit()
-        
-    if not os.path.exists(address.data.problem_class):
-        printf(f'{address.data.problem_class} does not exist. Execute {address.src.problem_classify} first.')
-        sys.exit()
     
     if (sys.argv[1] != '1') and os.path.exists(address.data.user_problem_dir):
         printf(f'{address.data.user_problem_dir} already exists. Using it for further processing')
     else:
+        if not os.path.exists(address.data.handles):
+            printf(f'{address.data.handles} does not exist. Execute {address.src.scrape_raw} first.')
+            sys.exit()
+            
+        if not os.path.exists(address.data.imputed_prob):
+            printf(f'{address.data.imputed_prob} does not exist. Execute {address.src.impute_problem} first.')
+            sys.exit()
+            
+        if not os.path.exists(address.data.problem_class):
+            printf(f'{address.data.problem_class} does not exist. Execute {address.src.problem_classify} first.')
+            sys.exit()
+
         if (sys.argv[1] == '1') and os.path.exists(address.data.user_problem_dir):
             shutil.rmtree(address.data.user_problem_dir)
         os.makedirs(address.data.user_problem_dir)

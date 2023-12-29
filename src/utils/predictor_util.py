@@ -125,6 +125,3 @@ def prob_advantage(handle, database = False):
     prob_adv = advantage[problem_class] * base_probability
     
     return base_probability, prob_adv
-
-
-print(prob_advantage('ris04hit', database=True))

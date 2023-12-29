@@ -96,3 +96,18 @@ async def get_user_submission(handle):
         user_submission_request = asyncio.create_task(request_json(session, api_url('us', handle=handle)))
         user_submission = await asyncio.gather(user_submission_request)
         return user_submission[0]
+    
+
+# Get problem data
+async def get_problem_data():
+    async with aiohttp.ClientSession() as session:
+        # Requesting list of problems
+        problem_list_request = asyncio.create_task(request_json(session, api_url('pp')))
+        problem_list = await asyncio.gather(problem_list_request)
+        
+        # Combining problem and its statistics in single df
+        df_problem = pd.DataFrame(problem_list[0]['problems'])
+        df_statistics = pd.DataFrame(problem_list[0]['problemStatistics'])
+        df = pd.concat((df_problem.drop(columns=['name']), df_statistics.drop(columns=['contestId', 'index'])), axis=1)
+        
+        return df

@@ -61,11 +61,13 @@ class Src:
         
         self.problem_classify = os.path.join(self.prefix, f'models/problem_classify.py{self.suffix}')
         self.up_prob_model = os.path.join(self.prefix, f'models/up_probability_model.py{self.suffix}')
+        self.problem_insert = os.path.join(self.prefix, f'models/problem_insert.py{self.suffix}')
         
         self.address_utils = os.path.join(self.prefix, f'utils/address_utils.py{self.suffix}')
         self.data_process_utils = os.path.join(self.prefix, f'utils/data_process_utils.py{self.suffix}')
         self.model_utils = os.path.join(self.prefix, f'utils/model_utils.py{self.suffix}')
         self.scrape_utils = os.path.join(self.prefix, f'utils/scrape_utils.py{self.suffix}')
+        self.predictor_util = os.path.join(self.prefix, f'utils/predictor_util.py{self.suffix}')
 
 
 class Model:
@@ -75,6 +77,7 @@ class Model:
         
         self.prob_classify = os.path.join(self.prefix, f'problem_classify.pkl{self.suffix}')
         self.user_problem = os.path.join(self.prefix, f'user_problem.pt{self.suffix}')
+        self.problem_insert = os.path.join(self.prefix, f'problem_inserter.pkl{self.suffix}')
 
 
 class Address:

@@ -49,18 +49,16 @@ if __name__ == '__main__':
         print("Required more command line arguments")
         sys.exit()
         
-    if (not os.path.exists(address.data.imputed_prob)):
-        printf(f'{address.data.imputed_prob} does not exist. Execute {address.src.impute_problem} first.')
-        sys.exit()
-
     if (sys.argv[1] != '1') and os.path.exists(address.model.prob_classify):
         printf(f'{address.model.prob_classify} already exists')
     else:
+        if (not os.path.exists(address.data.imputed_prob)):
+            printf(f'{address.data.imputed_prob} does not exist. Execute {address.src.impute_problem} first.')
+            sys.exit()
+
         num_cluster = 100
         print(k_mean_cluster(num_cluster))
         
-    predict_cluster()
-    
     if (sys.argv[1] != '1') and os.path.exists(address.data.problem_class):
         printf(f'{address.data.problem_class} already exists')
     else:

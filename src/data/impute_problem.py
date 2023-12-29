@@ -22,15 +22,15 @@ if __name__ == '__main__':
     if len(sys.argv) <= 1:
         print("Required more command line arguments")
         sys.exit()
-        
-    # Checking data requirements
-    if not os.path.exists(address.data.problems):
-        printf(f'{address.data.problems} does not exist. Execute {address.src.scrape_raw} first.')
-        sys.exit()
     
     # Checking overwrite
     if (sys.argv[1] != '1') and os.path.exists(address.data.imputed_prob):
         printf(f'{address.data.imputed_prob} already exists')
+        sys.exit()
+        
+    # Checking data requirements
+    if not os.path.exists(address.data.problems):
+        printf(f'{address.data.problems} does not exist. Execute {address.src.scrape_raw} first.')
         sys.exit()
     
     df_problem = pd.concat((pd.read_csv(address.data.problems), pd.read_csv(address.data.problem_diff)), axis=1)

@@ -142,21 +142,21 @@ if __name__ == '__main__':
         print("Required more command line arguments")
         sys.exit()
     
-    if (not os.path.exists(address.data.user_problem_dir)):
-        printf(f'{address.data.user_problem_dir} does not exist. Execute {address.src.up_prob_model} first.')
-        sys.exit()
-    
-    if (not os.path.exists(address.data.user_problem_stat)):
-        printf(f'{address.data.user_problem_stat} does not exist. Execute {address.src.up_prob_model} first.')
-        sys.exit()
-        
-    if (not os.path.exists(address.data.tags)):
-        printf(f'{address.data.tags} does not exist. Execute {address.src.scrape_raw} first.')
-        sys.exit()
-    
     if (sys.argv[1] != '1') and os.path.exists(address.model.user_problem):
         printf(f'{address.model.user_problem} already exists. Using it for further processing.')
     else:
+        if (not os.path.exists(address.data.user_problem_dir)):
+            printf(f'{address.data.user_problem_dir} does not exist. Execute {address.src.up_prob_model} first.')
+            sys.exit()
+        
+        if (not os.path.exists(address.data.user_problem_stat)):
+            printf(f'{address.data.user_problem_stat} does not exist. Execute {address.src.up_prob_model} first.')
+            sys.exit()
+            
+        if (not os.path.exists(address.data.tags)):
+            printf(f'{address.data.tags} does not exist. Execute {address.src.scrape_raw} first.')
+            sys.exit()
+    
         train_model()
 else:
     home_directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
