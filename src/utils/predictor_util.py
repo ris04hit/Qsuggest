@@ -85,18 +85,15 @@ def create_prediction_data(handle: str, problem_class: np.ndarray, problem_data:
     
     print("Normalized Data")
     
-    # Concatenating user data and problem data
-    indices1, indices2 = np.meshgrid(np.arange(user_data_table.shape[0]), np.arange(problem_data.shape[0]), indexing='ij')
-    indices1, indices2 = indices1.flatten(), indices2.flatten()
-    data = np.concatenate((user_data_table[indices1], problem_data[indices2]), axis=1)
-    
-    print("Created Data")
-    
-    return data, solved_problem
+    return user_data_table, problem_data, solved_problem
 
 
 # Calculates probabilistic advantage
 def prob_advantage(handle, database = False):
+    def predict_local(user, problem_data):
+        concat_data = np.apply_along_axis(lambda problem: np.concatenate((user, problem)), axis = 1, arr = problem_data)
+        return predict(torch.Tensor(concat_data)).to('cpu').detach().numpy()[:, 0]
+    
     # Problem class data
     problem_class = np.load(address.data.problem_class)
     num_class = len(set(problem_class))
@@ -109,16 +106,12 @@ def prob_advantage(handle, database = False):
     up_stat = np.load(address.data.user_problem_stat)
     
     # Prediction data
-    data, solved_problem = create_prediction_data(handle, problem_class, problem_data, up_stat, database)
+    user_data, problem_data, solved_problem = create_prediction_data(handle, problem_class, problem_data, up_stat, database)
     
     # Probability data
-    prob_data = predict(torch.Tensor(data)).to('cpu').detach().numpy()
+    prob_data = np.apply_along_axis(lambda user: predict_local(user, problem_data), axis = 1, arr = user_data)
     print("Prediction done by model")
-    prob_data = prob_data[:, 0].reshape((-1, num_problem))
     base_probability = np.copy(prob_data[0])
-    
-    # del data
-    del data
     
     # Weight for calculating weighted mean
     gamma = 0.9998      # Discount Factor for preferring new questions over older questions

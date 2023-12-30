@@ -10,6 +10,10 @@ def create_output_data(inp_data):
     # Getting from input data
     handle = inp_data['handle']
     
+    # Taking Care None handle
+    if handle is None:
+        return {}
+    
     # Getting predictions
     base_prob, prob_adv, solved_problem = prob_advantage(handle)
     
