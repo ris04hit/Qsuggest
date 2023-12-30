@@ -10,8 +10,19 @@
         "*://codeforces.com/problemset?*"
       ],
       "js": [
+        "scripts/helper.js",
         "scripts/sidebar.js",
         "scripts/load_data.js"
+      ]
+    },
+    {
+      "matches": [
+        "*://codeforces.com/problemset/problem/*"
+      ],
+      "js": [
+        "scripts/helper.js",
+        "scripts/sidebar.js",
+        "scripts/calc_prob.js"
       ]
     }
   ],

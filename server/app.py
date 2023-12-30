@@ -1,6 +1,6 @@
 import flask
 from flask_cors import CORS
-from server_util import create_output_data
+from server_util import *
 import time
 
 app = flask.Flask(__name__)
@@ -20,6 +20,14 @@ def get_data():
     print('Time Taken', time.time()-start_time)
     return flask.jsonify(out_data)
 
+@app.route('/solve_probability', methods=['POST'])
+def solve_probability():
+    start_time = time.time()
+    inp_data = flask.request.get_json()
+    out_data = predict_probability(inp_data)
+    
+    print('Time Taken', time.time()-start_time)
+    return flask.jsonify(out_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
