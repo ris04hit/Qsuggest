@@ -1,0 +1,19 @@
+#body {
+    height: 40px;
+    width: 180px;
+}
+
+#logo {
+    position: absolute;
+    height: 36px;
+    width: 36px;
+}
+
+#text {
+    position: absolute;
+    left: 45px;
+    top: 9px;
+    color: #0766AD;
+    font-family: Peralta;
+    font-size: 30px;
+}

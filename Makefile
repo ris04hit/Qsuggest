@@ -77,3 +77,8 @@ problem_classify:
 # Training model for user problem probability of solving
 up_prob_train:
 	python3 src/models/up_probability_model.py $(overwrite)
+
+
+# Starting Server
+run_server:
+	python3 server/app.py

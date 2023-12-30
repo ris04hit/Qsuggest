@@ -37,12 +37,14 @@ def create_user_data(handle: str, problem_class: np.ndarray, database = False):
         problemId_lookup_func = problemId_lookup(df_problem)
         problemId_df = df_solved_problems.apply(problemId_lookup_func, axis=1).dropna().astype(int)
         problemId = set(problemId_df)
+        
+        print("Fetched Data from Codeforces")
     
     onehot_class = np.zeros((num_class, ))
     for pid in problemId:
         onehot_class[problem_class[pid]] += 1
         
-    return np.insert(onehot_class, 0, user['rating'])
+    return np.insert(onehot_class, 0, user['rating']), problemId
         
 
 # Create data for prediction (changes problem_data)
@@ -54,7 +56,7 @@ def create_prediction_data(handle: str, problem_class: np.ndarray, problem_data:
         return new_user_data
     
     # Creating user data
-    user_data = create_user_data(handle, problem_class, database)
+    user_data, solved_problem = create_user_data(handle, problem_class, database)
     index_arr = np.arange(user_data.shape[0]).reshape((-1, 1))
     user_data_table = np.apply_along_axis(lambda index: increment_func(user_data, index), axis = 1, arr = index_arr)
     user_data_width = user_data_table.shape[1]
@@ -64,6 +66,8 @@ def create_prediction_data(handle: str, problem_class: np.ndarray, problem_data:
     mean_arr = up_stat['mean']
     std_arr = up_stat['std']
     cont_inp_width = shape_arr[0][1]
+    
+    print("Created user and problem data")
     
     # Normalize data
     user_data_table -= mean_arr[:, :user_data_width]
@@ -79,11 +83,16 @@ def create_prediction_data(handle: str, problem_class: np.ndarray, problem_data:
                                                                                where = std_arr[:, user_data_width:]!=0))
     np.seterr(invalid='warn')
     
+    print("Normalized Data")
+    
     # Concatenating user data and problem data
     indices1, indices2 = np.meshgrid(np.arange(user_data_table.shape[0]), np.arange(problem_data.shape[0]), indexing='ij')
     indices1, indices2 = indices1.flatten(), indices2.flatten()
     data = np.concatenate((user_data_table[indices1], problem_data[indices2]), axis=1)
-    return data
+    
+    print("Created Data")
+    
+    return data, solved_problem
 
 
 # Calculates probabilistic advantage
@@ -100,10 +109,11 @@ def prob_advantage(handle, database = False):
     up_stat = np.load(address.data.user_problem_stat)
     
     # Prediction data
-    data = create_prediction_data(handle, problem_class, problem_data, up_stat, database)
+    data, solved_problem = create_prediction_data(handle, problem_class, problem_data, up_stat, database)
     
     # Probability data
     prob_data = predict(torch.Tensor(data)).to('cpu').detach().numpy()
+    print("Prediction done by model")
     prob_data = prob_data[:, 0].reshape((-1, num_problem))
     base_probability = np.copy(prob_data[0])
     
@@ -124,4 +134,4 @@ def prob_advantage(handle, database = False):
     # Calculating probabilistic advantage
     prob_adv = advantage[problem_class] * base_probability
     
-    return base_probability, prob_adv
+    return base_probability, prob_adv, solved_problem
