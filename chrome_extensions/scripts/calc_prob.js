@@ -31,4 +31,8 @@ function get_prob_server(handle, problem){
       })
 }
 
-get_prob_server(get_handle(), get_problem())
+chrome.storage.local.get(['checkbox_pred']).then((result) => {
+    if (result.checkbox_pred){
+    get_prob_server(get_handle(), get_problem())
+    }
+})

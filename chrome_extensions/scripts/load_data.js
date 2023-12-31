@@ -171,5 +171,9 @@ function receive_data(handle){
   }
 }
 
-hide_table()
-receive_data(get_handle())
+chrome.storage.local.get(['checkbox_sug']).then((result) => {
+  if (result.checkbox_sug){
+    hide_table()
+    receive_data(get_handle())
+  }
+})

@@ -1,4 +1,12 @@
-function update_sidebar(){
+// function to control checkbox toggle
+function qsuggest_checkbox_pred(){
+    const checkbox = document.getElementById('Qsuggest-status-pred');
+    const val = (checkbox.checked) ? true : false;
+    chrome.storage.local.set({checkbox_pred: val}).then(() => location.reload());
+}
+
+// function to update sidebar
+function update_sidebar(checkbox_val){
     // Create new div for Qsuggest
     const div_qsuggest = 
         create_element('div', {
@@ -19,14 +27,15 @@ function update_sidebar(){
                     style: 'margin: 1em;',
                     children: [
                         create_element('input', {
-                            id: 'Qsuggest-status',
+                            id: 'Qsuggest-status-pred',
                             type: 'checkbox',
-                            checked: true
+                            checked: checkbox_val,
+                            onchange: qsuggest_checkbox_pred
                         }),
                         create_element('label', {
-                            for_val: 'Qsuggest-status',
+                            for_val: 'Qsuggest-status-pred',
                             style: 'vertical-align: top',
-                            textContent: ' Use Qsuggest recommendations'
+                            textContent: ' View Qsuggest predictions'
                         })
                     ]
                 })
@@ -38,4 +47,6 @@ function update_sidebar(){
     sidebar.insertBefore(div_qsuggest, sidebar.firstChild);
 }
 
-update_sidebar();
+chrome.storage.local.get(['checkbox_pred']).then((result) => {
+    update_sidebar(result.checkbox_pred);
+})

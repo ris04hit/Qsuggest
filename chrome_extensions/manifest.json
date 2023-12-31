@@ -12,7 +12,7 @@
       ],
       "js": [
         "scripts/helper.js",
-        "scripts/sidebar.js",
+        "scripts/sidebar_suggest.js",
         "scripts/load_data.js"
       ]
     },
@@ -22,7 +22,7 @@
       ],
       "js": [
         "scripts/helper.js",
-        "scripts/sidebar.js",
+        "scripts/sidebar_predict.js",
         "scripts/calc_prob.js"
       ]
     }
@@ -38,5 +38,8 @@
   },
   "host_permissions": [
     "http://127.0.0.1:5000/"
+  ],
+  "permissions": [
+    "storage"
   ]
 }

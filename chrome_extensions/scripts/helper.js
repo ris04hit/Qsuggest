@@ -25,7 +25,7 @@ function get_problem(){
 }
 
 // Function to create element
-function create_element(name, {className, textContent, style, id, type, children, checked, for_val, href, title}){
+function create_element(name, {className, textContent, style, id, type, children, checked, for_val, href, title, onchange}){
   const element = document.createElement(name);
   if (className !== undefined){
     element.className = className;
@@ -61,8 +61,12 @@ function create_element(name, {className, textContent, style, id, type, children
   if (href !== undefined){
     element.href = href;
   }
-  if (title !== undefined);
+  if (title !== undefined){
     element.title = title;
+  }
+  if (onchange !== undefined){
+    element.addEventListener('change', onchange);
+  }
   return element;
 }
 
@@ -93,6 +97,7 @@ function create_problem_data(problem){
   }
 }
 
+// Function to create tag elements
 function create_tag(tag){
   return create_element('a',{
     href: `/problemset?tags=${tag}`,
