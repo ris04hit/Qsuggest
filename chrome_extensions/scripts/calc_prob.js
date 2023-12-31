@@ -25,6 +25,10 @@ function get_prob_server(handle, problem){
     .then(data => {
         sidebar_probability(data);
     })
+    .catch(error => {
+        console.log(error);
+        alert('Can\'t connect to Qsuggest server')
+      })
 }
 
 get_prob_server(get_handle(), get_problem())

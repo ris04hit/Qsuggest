@@ -1,6 +1,7 @@
 import sys
 import os
 import pandas as pd
+import ast
 
 sys.path.append(os.path.abspath('src'))
 from utils.predictor_util import prob_advantage, prob_single
@@ -20,13 +21,15 @@ def create_output_data(inp_data):
     base_prob, prob_adv, solved_problem = prob_advantage(handle, user_info=user_info, submission=submission)
     
     # Getting problem data
-    df_problem = pd.read_csv(address.data.problems)[['contestId', 'index']]
+    df_problem = pd.read_csv(address.data.problems)[['contestId', 'index', 'name', 'tags', 'rating', 'solvedCount']]
+    df_problem['tags'] = df_problem['tags'].apply(ast.literal_eval)
+    df_problem['rating'] = df_problem['rating'].fillna(-1)
     
     return {
         'base_probability': base_prob.tolist(),
         'probability_advantage': prob_adv.tolist(),
         'solved_problem': list(solved_problem),
-        'problem_data': df_problem.to_dict()
+        'problem_data': df_problem.to_dict('records')
     }
     
 def predict_probability(inp_data):

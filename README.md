@@ -13,7 +13,7 @@
     - [**Commands**](#commands-2)
   - [**Preprocessing and Training Models separately**](#preprocessing-and-training-models-separately)
     - [**Commands**](#commands-3)
-- [Running Server](#running-server)
+- [**Running Server**](#running-server)
 
 
 # **Qsuggest**  
@@ -80,5 +80,5 @@ For preprocessing and training each model individually, run following commands i
 For preprocessing and training [problem classification model](models/problem_classify.pkl), execute: `make problem_classify_model`  
 For preprocessing and training [user problem probability model](models/user_problem.pt), execute: `make up_prob_model`  
 
-# Running Server
+# **Running Server**
 To start running server, execute `make run_server`

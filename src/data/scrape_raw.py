@@ -52,7 +52,7 @@ async def problem_data():
             # Combining problem and its statistics in single df
             df_problem = pd.DataFrame(problem_list[0]['problems'])
             df_statistics = pd.DataFrame(problem_list[0]['problemStatistics'])
-            df = pd.concat((df_problem.drop(columns=['name']), df_statistics.drop(columns=['contestId', 'index'])), axis=1)
+            df = pd.concat((df_problem, df_statistics.drop(columns=['contestId', 'index'])), axis=1)
             df.to_csv(address.data.problems, index = False)
             printf(f'{address.data.problems} created\t\t\tTime Taken: {time.time()-start_time}')
 
