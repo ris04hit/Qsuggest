@@ -21,8 +21,9 @@ def check_corrupt(batch_ind, batch_size, df_user):
                 lock = threading.Lock()
                 with lock:
                     file_checked += 1
-                temp_df = pd.read_csv(address.data.rating(row['handle']))
-                if len(temp_df) == 0:
+                temp_df_rating = pd.read_csv(address.data.rating(row['handle']))
+                temp_df_submission = pd.read_csv(address.data.submission(row['handle']), nrows=0)
+                if (len(temp_df_rating) == 0) or ('rating' not in temp_df_submission.keys()):
                     os.remove(address.data.rating(row['handle']))
                     lock = threading.Lock()
                     with lock:
