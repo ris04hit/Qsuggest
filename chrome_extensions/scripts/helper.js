@@ -25,7 +25,7 @@ function get_problem(){
 }
 
 // Function to create element
-function create_element(name, {className, textContent, style, id, type, children, checked, for_val, href, title, onchange}){
+function create_element(name, {className, textContent, style, id, type, children, checked, for_val, href, title, onchange, src}){
   const element = document.createElement(name);
   if (className !== undefined){
     element.className = className;
@@ -67,6 +67,9 @@ function create_element(name, {className, textContent, style, id, type, children
   if (onchange !== undefined){
     element.addEventListener('change', onchange);
   }
+  if (src !== undefined){
+    element.src = src;
+  }
   return element;
 }
 
@@ -106,4 +109,9 @@ function create_tag(tag){
     title: tag.charAt(0).toUpperCase() + tag.slice(1),
     textContent: tag
   })
+}
+
+// Creates key for hashmap
+function create_key(problem){
+  return `${problem['contestId']}_${problem['index']}`;
 }

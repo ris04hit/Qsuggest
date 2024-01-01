@@ -11,15 +11,23 @@ function show_table(){
 }
 
 // Function to filter data
-function filter_data(data){
+function filter_data(data, problem_data_cf){
   // Unpacking data
-  const base_prob = data['base_probability'];
   const prob_adv = data['probability_advantage'];
   const solved_prob = new Set(data['solved_problem']);
   const problem_data = data['problem_data'];
 
   // Calculating relevant constants
-  const num_problem = base_prob.length;
+  const num_problem = prob_adv.length;
+
+  // Updating problem_data
+  problem_hash = {};
+  for (let i = 0; i < problem_data_cf.length; i++){
+    problem_hash[create_key(problem_data_cf[i])] = problem_data_cf[i]['solvedCount'];
+  }
+  for (let i = 0; i < problem_data.length; i++){
+    problem_data[i]['solvedCount'] = problem_hash[create_key(problem_data[i])];
+  }
 
   // Calculating filter data
   var filtered_data = [];
@@ -80,10 +88,31 @@ function modify_row(row, problem){
   }
 
   // Modifying fifth column
-  const status = data[4].querySelector('a');
-  status.href = problem['status_link'];
-  status.childNodes[1].remove();
-  status.innerHTML += problem['num_solved_text'];
+  if (problem['num_solved'] === -1){
+    data[4].innerHTML = '';
+  }
+  else {
+    if (data[4].querySelector('a') !== null){
+      const status = data[4].querySelector('a');
+      status.href = problem['status_link'];
+      status.childNodes[1].remove();
+      status.innerHTML += problem['num_solved_text'];
+    }
+    else{
+      data[4].innerHTML = '';
+      data[4].appendChild(create_element('a', {
+        title: 'Participants solved the problem',
+        href: problem['status_link'],
+        children: [
+          create_element('img', {
+            style: 'vertical-align:middle;',
+            src: '//codeforces.org/s/69569/images/icons/user.png'
+          })
+        ]
+      }));
+      data[4].querySelector('a').innerHTML += problem['num_solved_text'];
+    }
+  }
 }
 
 // Function to show data in table
@@ -100,6 +129,25 @@ function modify_table(paged_data){
   show_table();
 }
 
+// Function to get problem data
+function get_problem_data(data){
+  fetch(`https://codeforces.com/api/problemset.problems`, {
+    method: 'GET'
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(problem_data => {
+    const filtered_data = filter_data(data, problem_data['result']['problemStatistics']);
+    const page_num = get_pagenum();
+    const paged_data = filtered_data.slice(num_prob_page*(page_num-1), num_prob_page*page_num);
+    modify_table(paged_data);
+  })
+}
+
 // Function to connect to Qsuggest server
 function get_data_server(data){
   fetch(`${server_url}/get_data`, {
@@ -111,10 +159,7 @@ function get_data_server(data){
   })
   .then(response => response.json())
   .then(data => {
-    const filtered_data = filter_data(data);
-    const page_num = get_pagenum();
-    const paged_data = filtered_data.slice(num_prob_page*(page_num-1), num_prob_page*page_num);
-    modify_table(paged_data);
+    get_problem_data(data);
   })
   .catch(error => {
     console.log(error);

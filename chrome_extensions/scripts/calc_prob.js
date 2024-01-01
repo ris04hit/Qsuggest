@@ -10,7 +10,7 @@ function sidebar_probability(probability){
 }
 
 // Function to connect to Qsuggest server
-function get_prob_server(handle, problem){
+function get_prob_server(handle, user_info, submission, problem){
     fetch(`${server_url}/solve_probability`, {
         method: 'POST',
         headers: {
@@ -18,7 +18,9 @@ function get_prob_server(handle, problem){
         },
         body: JSON.stringify({
             'handle': handle,
-            'problem': problem
+            'problem': problem,
+            'user_info': user_info,
+            'submission': submission
         })
     })
     .then(response => response.json())
@@ -31,8 +33,52 @@ function get_prob_server(handle, problem){
       })
 }
 
+// Function to get data from server
+function receive_data_prob(handle, problem){
+    // Receive user info
+    if (handle === null){
+        alert('Please login to use Qsuggest Functionality')
+    }
+    else{
+        const user_data = fetch(`https://codeforces.com/api/user.info?handles=${handle}`, {
+            method: 'GET'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            data = data['result'][0];
+            return data;
+        });
+  
+        // Receive submission info
+        const submission_data = fetch(`https://codeforces.com/api/user.status?handle=${handle}`, {
+            method: 'GET'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            data = data['result'];
+            return data;
+        });
+  
+        // Pass the data to server
+        Promise.all([user_data, submission_data])
+        .then(data => {
+            get_prob_server(handle, data[0], data[1], problem);
+        })
+    }
+}
+
 chrome.storage.local.get(['checkbox_pred']).then((result) => {
     if (result.checkbox_pred){
-    get_prob_server(get_handle(), get_problem())
+        receive_data_prob(get_handle(), get_problem())
     }
 })

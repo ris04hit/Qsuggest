@@ -120,7 +120,7 @@ def prob_advantage(handle, database = False, user_info = None, submission = None
     base_probability = np.copy(prob_data[0])
     
     # Weight for calculating weighted mean
-    gamma = 0.9998      # Discount Factor for preferring new questions over older questions
+    gamma = 0.999      # Discount Factor for preferring new questions over older questions
     weights = np.geomspace(1, gamma**(num_problem-1), num_problem)
     weights /= np.sum(weights)
     
@@ -131,9 +131,14 @@ def prob_advantage(handle, database = False, user_info = None, submission = None
     advantage = (prob_data - prob_data[0])[1:]
     
     # Calculating probabilistic advantage
-    prob_adv = advantage[problem_class] * base_probability
+    prob_adv = advantage[problem_class] * base_probability * weights        # multiplying with weights to ensure more weight to new problems
     
-    return base_probability, prob_adv, solved_problem
+    # Ensuring less difficult problems are given
+    prob_threshold = 0.5
+    difficulty_factor = 0.5
+    prob_adv[base_probability < prob_threshold] *= difficulty_factor
+    
+    return prob_adv, solved_problem
 
 
 # Caclulates probability of single user/problem
