@@ -4,10 +4,12 @@ import numpy as np
 import pandas as pd
 import torch
 import asyncio
+from sklearn.impute import KNNImputer
 
 sys.path.append(os.path.abspath('src'))
 from utils.address_utils import *
 from utils.scrape_utils import *
+from utils.data_process_utils import *
 from models.up_probability_model import predict
 
 home_directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
@@ -162,13 +164,19 @@ def prob_single(handle, problem, database = False, user_info = None, submission 
     # Prediction data
     user_data, solved_problems = create_user_data(handle, problem_class, database, user_info, submission)
     problemId = problemId_lookup(df_problem)(problem)
+    problem_val = problem_data[problemId]
     
     # Checking is problem is in database
     if problemId is None:
-        return None
+        new_problem_df = pd.DataFrame([problem])
+        num_tag, problem_val = problem_df_to_np(new_problem_df)
+        problem_val[problem_val < 0] = np.nan
+        weights = create_weight(num_tag=num_tag, problem_Data=problem_data)
+        neigh = KNNImputer(n_neighbors=6, missing_values=np.nan, metric=distance_func(weights)).fit(problem_data)
+        problem_val = neigh.transform(problem_val)[0]
     
     # Normalization
-    data = np.concatenate((user_data, problem_data[problemId])).reshape((1,-1))
+    data = np.concatenate((user_data, problem_val)).reshape((1,-1))
     np.seterr(invalid='ignore')
     data[:, :cont_inp_width] -= mean_arr
     data[:, :cont_inp_width] = np.nan_to_num(np.divide(data[:, :cont_inp_width], std_arr, out=np.zeros_like(data[:, :cont_inp_width]), where= std_arr!=0))
