@@ -34,12 +34,17 @@ def create_user_data(handle: str, problem_class: np.ndarray, database = False, u
             user = asyncio.run(get_user_info(handle))
         else:
             user = user_info
+            if 'rating' not in user:
+                user['rating'] = 0      # Dealing with user with no contests
         
         if submission is None:
             df_submission = pd.DataFrame(asyncio.run(get_user_submission(handle)))
         else:
             df_submission = pd.DataFrame(submission)
-        df_solved_problems = df_submission[df_submission['verdict'] == 'OK']['problem'].apply(pd.Series)
+        if df_submission.empty:
+            df_solved_problems = df_submission
+        else:
+            df_solved_problems = df_submission[df_submission['verdict'] == 'OK']['problem'].apply(pd.Series)
         
         df_problem = pd.read_csv(address.data.problems)
         problemId_lookup_func = problemId_lookup(df_problem)
@@ -136,9 +141,10 @@ def prob_advantage(handle, database = False, user_info = None, submission = None
     prob_adv = advantage[problem_class] * base_probability * weights        # multiplying with weights to ensure more weight to new problems
     
     # Ensuring less difficult problems are given
-    prob_threshold = 0.5
-    difficulty_factor = 0.5
-    prob_adv[base_probability < prob_threshold] *= difficulty_factor
+    # prob_threshold = 0.9
+    # difficulty_factor = 0.5
+    # prob_adv[base_probability < prob_threshold] *= difficulty_factor
+    prob_adv *= base_probability
     
     return prob_adv, solved_problem
 
